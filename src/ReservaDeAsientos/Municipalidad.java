@@ -4,13 +4,10 @@ import com.bethecoder.ascii_table.ASCIITable;
 import com.bethecoder.ascii_table.impl.CollectionASCIITableAware;
 import com.bethecoder.ascii_table.spec.IASCIITableAware;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
-//USO DEL PATRON SINGLETON,para crear un solo objeto de la clase municipalidad
-
-public class Municipalidad {
+public class Municipalidad  {
 
     private List<Vecino> listaDeVecinos;
     private List<Reserva>listaDeReservaciones;
@@ -19,8 +16,7 @@ public class Municipalidad {
     private static Municipalidad municipalidad = new Municipalidad ();
     public static Municipalidad getInstance () {
         return municipalidad;
-    }//metodo para instancia el objeto unico
-
+    }
     private Municipalidad () {
         this.listaDeVecinos = new ArrayList<> ();
         this.listaDeReservaciones=new ArrayList<> ();
@@ -29,18 +25,15 @@ public class Municipalidad {
         cargarVecinos ();
     }
 
-
     public void registroDeBuses(int  numero,String horaDeParida,String nombreDeChofer,String nombreDeCopiloto)throws Exception{
         Bus bus=new Bus (numero,horaDeParida,nombreDeChofer,nombreDeCopiloto);
         bus.validarHora ();
         this.listaDeBuses.add (bus);
     }
-
     public void generarReserva(int numeroDeReserva,String fecha){
         Reserva reserva=new Reserva (numeroDeReserva,fecha);
         this.listaDeReservaciones.add(reserva);
     }
-
     public String obtenerClase(String dni){
         String clase=null;
         for(Vecino v:this.listaDeVecinos){
@@ -49,7 +42,6 @@ public class Municipalidad {
             }
         }return clase;
     }
-
     public Bus obtenerBus(int numero){
         for(Bus b:this.listaDeBuses){
             if(b.getNumero ()==numero){
@@ -57,8 +49,6 @@ public class Municipalidad {
             }
         }return null;
     }
-
-
     public Reserva obtenerReserva(int numeroDeReserva){
         for(Reserva r:this.listaDeReservaciones){
             if(r.getNumeroDeReserva ()==numeroDeReserva){
@@ -66,7 +56,13 @@ public class Municipalidad {
             }
         }return null;
     }
-
+    public Vecino obtenerVecino(String numeroDeDni){
+        for(Vecino v:this.listaDeVecinos){
+            if(v.getDni ().equals (numeroDeDni)){
+                return v;
+            }
+        }return null;
+    }
     public void asignarDatosAReserva(int numeroDeReserva,String dni,int numeroDeBus,int numeroDeAsiento){
         Reserva reserva=obtenerReserva (numeroDeReserva);
         Vecino vecino=FactoriaVecino.obtenerInstancia (dni);
@@ -78,9 +74,6 @@ public class Municipalidad {
             reserva.asignarAsiento (asiento);
         }
     }
-
-
-    //para hallar la excepcion de usuario Unico
     public List<String> registrarDni () {
         List<String> dni = new ArrayList<> ();
         for (Vecino vecino : this.listaDeVecinos) {
@@ -88,17 +81,15 @@ public class Municipalidad {
         }
         return dni;
     }
-
-    public void RegistroVecino (Vecino vecino) throws Exception {
+    public void registroVecino (Vecino vecino) throws Exception {
         boolean existe = registrarDni ().contains (vecino.getDni ());
-        if (existe) throw new Exception ("El usuario ya existe");
+        if (existe) throw new Exception ("\nEl usuario ya existe");
         else {
             vecino.validarEdad ();
             vecino.validarEstado ();
             listaDeVecinos.add (vecino);
         }
     }
-
     public boolean validarExistencia(String dni){
         boolean validar=false;
         for(Vecino vecino:this.listaDeVecinos){
@@ -107,7 +98,6 @@ public class Municipalidad {
             }
         }return validar;
     }
-
     public double obtenerpromedioEdadAdultoMayor () {
         int suma = 0;
         int contadorAdultoMayor = 0;
@@ -119,7 +109,6 @@ public class Municipalidad {
         return (double)suma / contadorAdultoMayor;
 
     }
-
     public double obtenerpromedioEdadMiembroClubEcologia () {
         int  suma = 0;
         int contador = 0;
@@ -135,19 +124,15 @@ public class Municipalidad {
         return (double)suma/contador;
 
     }
-
     public List<Vecino> getListaDeVecinos () {
         return listaDeVecinos;
     }
-
     public List<Reserva> getListaDeReservaciones () {
         return listaDeReservaciones;
     }
-
     public List<Bus> getListaDeBuses () {
         return listaDeBuses;
     }
-
     public void listarDatosBus(){
         IASCIITableAware asciiTableAware =
                 new CollectionASCIITableAware<Bus> (listaDeBuses,
@@ -155,22 +140,15 @@ public class Municipalidad {
         ASCIITable.getInstance ().printTable (asciiTableAware);
 
     }
-
-    public void listarDatosDeVecinoBuscado(String dni){
-        List<Vecino>vecinoEncontrado=new ArrayList<> ();
-        for(Vecino v:this.listaDeVecinos){
-            if(v.getDni ().equals (dni)){
-                vecinoEncontrado.add (v);
-            }
-        }
-
-        TableList t1=new TableList (7,"Nombre","Apellido","DNI","Telefono","Estado civil","Edad","Correo electornico").sortBy (0);
-        vecinoEncontrado.forEach(element -> t1.addRow(element.getNombre(), element.getApellido (), element.getDni (), element.getTelefono ()
-        ,element.getEstadoCivil (),String.valueOf (element.getEdad ()),element.getCorreoElectronico ()));
-        t1.print ();
-
+    public TableList listarDatosDeVecinoBuscado(String dni){
+        Vecino vecinoBuscado=obtenerVecino (dni);
+        TableList t1=null;
+        if(vecinoBuscado!=null){
+            t1=new TableList (7,"Nombre","Apellido","DNI","Telefono","Estado civil","Edad","Correo electornico").sortBy (0);
+        t1.addRow(vecinoBuscado.getNombre(), vecinoBuscado.getApellido (), vecinoBuscado.getDni (), vecinoBuscado.getTelefono ()
+        ,vecinoBuscado.getEstadoCivil (),String.valueOf (vecinoBuscado.getEdad ()),vecinoBuscado.getCorreoElectronico ());}
+        return t1;
     }
-
     public void listarDatosdeReserva(int numeroDeReserva){
         Reserva reserva=null;
         for(Reserva r:this.listaDeReservaciones){
@@ -199,53 +177,52 @@ public class Municipalidad {
             System.out.println ("No se encontraron datos");
         }
     }
-
-    public void listarPasajerosPorFechaYnroBus(String fecha,int numeroDeBus){
+    public TableList listarPasajerosPorFechaYnroBus(String fecha,int numeroDeBus){
         List<Reserva>listaDeReservas=new ArrayList<> ();
         for(Reserva reserva:this.listaDeReservaciones){
             if(reserva.getFechaReserva ().equals (fecha)&&reserva.getBus ().getNumero ()==numeroDeBus){
                 listaDeReservas.add (reserva);
             }
         }
+        TableList t3=null;
         if(listaDeReservas.size ()!=0){
-            TableList t3=new TableList (8,"Nombre","Apellido","DNI","Telefono","Estado civil","Edad","Correo electornico","Obsequio").sortBy (0);
-            listaDeReservas.forEach(element -> t3.addRow(element.getVecino ().getNombre(), element.getVecino ().getApellido (), element.getVecino ().getDni (), element.getVecino ().getTelefono ()
-                    ,element.getVecino ().getEstadoCivil (),String.valueOf (element.getVecino ().getEdad ()),element.getVecino ().getCorreoElectronico (),element.getVecino ().promocionEspecial ()));
-            t3.print ();
-        }else{
-            System.out.println ("No se encontraron datos");
-        }
+            t3=new TableList (8,"Nombre","Apellido","DNI","Telefono","Estado civil","Edad","Correo electornico","Obsequio").sortBy (0);
+            TableList finalT = t3;
+            listaDeReservas.forEach(element -> finalT.addRow(element.getVecino ().getNombre(), element.getVecino ().getApellido (), element.getVecino ().getDni (), element.getVecino ().getTelefono ()
+                    ,element.getVecino ().getEstadoCivil (),String.valueOf (element.getVecino ().getEdad ()),element.getVecino ().getCorreoElectronico (),element.getVecino ().promocionEspecial ()));}
+
+        return t3;
+
 
     }
-
-    public void listarVecinosConPremio(){
+    public TableList listarVecinosConPremio(){
         List<Vecino>listaDeVecinosConPremio=new ArrayList<> ();
         for(Vecino v:this.listaDeVecinos){
             if(!v.promocionEspecial ().equals ("-")){
                 listaDeVecinosConPremio.add(v);
             }
         }
+        TableList t4=null;
         if(listaDeVecinosConPremio.size ()!=0){
-            TableList t4=new TableList (8,"Nombre","Apellido","DNI","Telefono","Estado civil","Edad","Correo electornico","Obsequio").sortBy (0);
-            listaDeVecinosConPremio.forEach(element -> t4.addRow(element.getNombre(), element.getApellido (), element.getDni (), element.getTelefono ()
+            t4=new TableList (8,"Nombre","Apellido","DNI","Telefono","Estado civil","Edad","Correo electornico","Obsequio").sortBy (0);
+            TableList finalT=t4;
+            listaDeVecinosConPremio.forEach(element ->finalT .addRow(element.getNombre(), element.getApellido (), element.getDni (), element.getTelefono ()
                     ,element.getEstadoCivil (),String.valueOf (element.getEdad ()),element.getCorreoElectronico (),element.promocionEspecial ()));
-            t4.print ();
-        }else{
-            System.out.println ("No se encontraron datos");
-        }
+        }return t4;
     }
-
-    public void listarAsientosDisponiblePorBus(){
+    public TableList listarAsientosDisponiblePorBus(){
 
         TableList t5=new TableList (2,"Nro de bus","Nro de asientos disponibles").sortBy (0);
         this.listaDeBuses.forEach (element ->t5.addRow (String.valueOf (element.getNumero ()),String.valueOf (element.asientosDisponibles ())));
-        t5.print ();
+        return  t5;
 
     }
-
-
-
-
+    public TableList listarBaseDeDatosDeVecinos(){
+        TableList t6=new TableList (8,"Nombre","Apellido","DNI","Telefono","Estado civil","Edad","Correo electornico","Grupo").sortBy (0);
+        this.listaDeVecinos.forEach(element -> t6.addRow(element.getNombre(), element.getApellido (), element.getDni (), element.getTelefono ()
+                ,element.getEstadoCivil (),String.valueOf (element.getEdad ()),element.getCorreoElectronico (),element.getClass ().getSimpleName ()));
+        return t6;
+    }
     public void cargarVecinos(){
         Vecino vecino=FactoriaVecino.createVecino (1,"Juan Carlos","Quispe Flores","40156070","961002314","Casado","25","Juan14@gmail.com");
         Vecino vecino1=FactoriaVecino.createVecino (2,"Maria Julia","Perez Loayza","40156071","970365923","Soltera","76","Maria15@gmail.com");
@@ -259,7 +236,6 @@ public class Municipalidad {
         this.listaDeVecinos.add(vecino4);
 
     }
-
     public void cargarBuses(){
         Bus bus1=new Bus (1,"9:00 am","Juan Carlos Mejia Suarez","Pedro Almenara Solis");
         Bus bus2=new Bus (2,"12:00 am","Ruben Garcia Lopez","Juan Rivera Mendez");
@@ -271,14 +247,4 @@ public class Municipalidad {
         this.listaDeBuses.add(bus4);
     }
 
-
-
-    @Override
-    public String toString () {
-        return "Municipalidad{" +
-                "listaDeVecinos=" + listaDeVecinos +
-                ", listaDeReservaciones=" + listaDeReservaciones +
-                ", listaDeBuses=" + listaDeBuses +
-                '}';
-    }
 }

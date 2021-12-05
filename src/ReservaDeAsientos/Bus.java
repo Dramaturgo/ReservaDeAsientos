@@ -20,14 +20,12 @@ public class Bus {
         this.listaDeAsientos = new ArrayList<> (40);
         this.cuadroDeAsientos=generarCuadroDeAsientos ();
     }
-
     public void validarHora()throws Exception{
        String[]parts=hora_de_partida.split (":");
        int hora=Integer.parseInt (parts[0]);
        if(hora>15||hora<9)throw new Exception ("\n\nlos horarios de circulacion son de 9:00 am a 15:00pm,Ingrese un horario valido");
 
     }
-
     public void registrarAsiento(int numero)throws Exception{
         boolean existe = registroDeNumeros().contains (numero);
         if(existe) throw new Exception("Asiento ya reservado");
@@ -36,7 +34,6 @@ public class Bus {
             this.listaDeAsientos.add (asiento);
         }
     }
-
     public List<Integer>registroDeNumeros(){
         List<Integer>numeros=new ArrayList<>(40);
         for(Asiento asiento:this.listaDeAsientos){
@@ -44,7 +41,6 @@ public class Bus {
         }
         return numeros;
     }
-
     public Asiento obtenerAsiento(int numero){
         for(Asiento a:listaDeAsientos){
             if(a.getNumero ()==numero){
@@ -52,7 +48,6 @@ public class Bus {
             }
         }return null;
     }
-
     public String [][] generarCuadroDeAsientos(){
         String [][] matriz=new String[11][5];
         for(int i=0;i<matriz.length;i++){
@@ -77,7 +72,6 @@ public class Bus {
         matriz[0][4]="4";
         return matriz;
     }
-
     public int obtenerNumeroDeAsiento(String coordenadas){
         String letra=coordenadas.substring(0,1).toUpperCase();
         int x=Integer.parseInt(coordenadas.substring(1));
@@ -101,7 +95,6 @@ public class Bus {
         return b;
 
     }
-
     public static void mostrarMatriz(String [][] matriz){
         for(int i=0;i<matriz.length;i++){
             for (int j=0;j<matriz[i].length;j++ ) {
@@ -109,43 +102,27 @@ public class Bus {
             }
             System.out.println("");
         }}
-
     public int asientosDisponibles(){
         return 40-listaDeAsientos.size ();
     }
-
     public int getNumero () {
         return numero;
     }
-
     public String getHora_de_partida () {
         return hora_de_partida;
     }
-
     public List<Asiento> getListaDeAsientos () {
         return listaDeAsientos;
     }
-
     public String getChofer () {
         return chofer;
     }
-
     public String getCopiloto () {
         return copiloto;
     }
-
     public String[][] getCuadroDeAsientos () {
         return cuadroDeAsientos;
     }
 
-    @Override
-    public String toString () {
-        return "Bus{" +
-                "nombreDeChofer='" + chofer + '\'' +
-                ", nombreDeCopiloto='" + copiloto + '\'' +
-                ", numero=" + numero +
-                ", horaDePartida='" + hora_de_partida + '\'' +
-                ", listaDeAsientos=" + listaDeAsientos +
-                '}';
-    }
+
 }

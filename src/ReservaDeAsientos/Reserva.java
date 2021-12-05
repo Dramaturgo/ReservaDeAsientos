@@ -25,7 +25,6 @@ public class Reserva {
         this.asiento=asiento;
     }
 
-
     public int getNumeroDeReserva () {
         return numeroDeReserva;
     }
@@ -45,20 +44,5 @@ public class Reserva {
     public Asiento getAsiento () {
         return asiento;
     }
-
-
-    @Override
-    public String toString () {
-        return "\nReservacion Nro 000" + getNumeroDeReserva () + ":" +
-                "\nFecha de reservación:" + getFechaReserva () +
-                "\nDatos del bus Nro " + bus.getNumero () + ":" +
-                "\nNombre del chofer: " + bus.getChofer () +
-                "\nNombre del copiloto" + bus.getCopiloto () +
-                "\nHora de partida: " + bus.getHora_de_partida () + ":00" +
-                "\nDatos del vecino:" + vecino.toString () +
-                "\nNumero de asiento reservado: " + asiento.getNumero ();
-    }
-
-
 
 }

@@ -41,7 +41,7 @@ static Controlador controlador=new Controlador (sanBorja,vista);
 
         String anim= "|/-\\";
         for (int i =0 ; i < 101 ; i++) {
-            String data = "\r" + anim.charAt(i % anim.length()) + " GENERANDO RESERVACION " + i+" %";
+            String data = "\r" + anim.charAt(i % anim.length()) + " CARGANDO INFORMACION " + i+" %";
             System.out.write(data.getBytes());
             Thread.sleep(100);
 
@@ -61,7 +61,7 @@ static Controlador controlador=new Controlador (sanBorja,vista);
         switch (opcion) {
             case 1 -> opcionRegistro();
             case 2 -> opcionReserva ();
-            case 3 -> System.out.println ("opcion 3");
+            case 3 -> opcionConsultaReserva ();
             case 4 -> accesoPrivado();
             case 5 -> System.exit (0);
             default -> {
@@ -72,7 +72,7 @@ static Controlador controlador=new Controlador (sanBorja,vista);
     }
     public static void opcionRegistro()throws IOException, InterruptedException{
      logo();
-     System.out.println("1- Registro de Mimbros del club de ecologia");
+     System.out.println("1- Registro de Miembros del club de ecologia");
      System.out.println("2- Registro de Adulto Mayor");
      System.out.println("3- Regresar\n");
      System.out.println("Ingrese una opcion:");
@@ -97,19 +97,10 @@ static Controlador controlador=new Controlador (sanBorja,vista);
                  int edad=Integer.parseInt(sc.next());
                  System.out.print("Email:        ");
                  String correoElectronico=sc.next();
-                 Vecino miembroClub = FactoriaVecino.createVecino (opcion, nombre, apellido, dni, telefono, estadoCivil, String.valueOf(edad), correoElectronico);
-                 try {
-                 sanBorja.RegistroVecino (miembroClub);
-                 } catch (Exception e) {
-                 System.out.println (e.getMessage ());
+                 controlador.registrarVecino (opcion,nombre,apellido,dni,telefono,estadoCivil,String.valueOf (edad),correoElectronico);
                  continuar();
                  limpiaPantalla();
                  opcionRegistro();
-                 }
-                 System.out.println("\nRegistrado exitosamente!!!");
-                 continuar();
-                 limpiaPantalla();
-                 menuPrincipal ();
                  break;
         case 2:
                  logo();
@@ -129,19 +120,10 @@ static Controlador controlador=new Controlador (sanBorja,vista);
                  edad=Integer.parseInt(sc.next());
                  System.out.print("Email:        ");
                  correoElectronico=sc.next();
-                 Vecino adultoMayor = FactoriaVecino.createVecino (opcion, nombre, apellido, dni, telefono, estadoCivil, String.valueOf(edad), correoElectronico);
-                 try {
-                 sanBorja.RegistroVecino (adultoMayor);
-                 } catch (Exception e) {
-                 System.out.println (e.getMessage ());
+                 controlador.registrarVecino (opcion,nombre,apellido,dni,telefono,estadoCivil,String.valueOf (edad),correoElectronico);
                  continuar();
                  limpiaPantalla();
-                 opcionRegistro();
-                 }
-                 System.out.println("\nRegistrado exitosamente!!!");
-                 continuar();
-                 limpiaPantalla();
-                 menuPrincipal ();
+                 opcionRegistro ();
                  break;
         case 3:
                  limpiaPantalla();
@@ -159,7 +141,7 @@ static Controlador controlador=new Controlador (sanBorja,vista);
         String user=sc.next();
         Console console = System.console();
         char[]password=console.readPassword("Contraseña: ");
-        if(user.equals("maria")&&(String.valueOf(password)).equals("123")){
+        if(user.equals("admi")&&(String.valueOf(password)).equals("123")){
             limpiaPantalla ();
             System.out.println("Bienvenido");
             opcionPrivado();
@@ -179,7 +161,8 @@ static Controlador controlador=new Controlador (sanBorja,vista);
     System.out.println("5- Promediar de edades de Miembros del club de ecologia sin obsequio");
     System.out.println("6- Obsequios de Vecinos");
     System.out.println("7- Asientos disponibles");
-    System.out.println("8- Regresar\n");
+    System.out.println("8- Listar vecinos");
+    System.out.println("9- Regresar\n");
     System.out.println("Ingrese una opcion");
     int opcion=sc.nextInt();
     limpiaPantalla ();
@@ -189,12 +172,7 @@ static Controlador controlador=new Controlador (sanBorja,vista);
                   System.out.print("Ingrese el numero de DNI del pasajero buscado:     ");
                   String dniBuscado=sc.next();
                   System.out.println ("");
-                  if(sanBorja.validarExistencia (dniBuscado)) {
-                      sanBorja.listarDatosDeVecinoBuscado (dniBuscado);
-                      controlador.obtenerClase (dniBuscado);
-                  }else{
-                      System.out.println ("No se encontro informacion");
-                  }
+                  controlador.mostrarDatosDeVecinoBuscado (dniBuscado);
                   continuar ();
                   limpiaPantalla ();
                   opcionPrivado ();
@@ -206,35 +184,25 @@ static Controlador controlador=new Controlador (sanBorja,vista);
                System.out.print("Ingrese el numero de bus             :");
                int numeroDeBusBuscado=sc.nextInt ();
                System.out.println("\n");
-               sanBorja.listarPasajerosPorFechaYnroBus (fechaBuscada,numeroDeBusBuscado);
+               controlador.mostrarPasajerosPorFechaYhora (fechaBuscada,numeroDeBusBuscado);
                continuar ();
                limpiaPantalla ();
                opcionPrivado ();
                   break;
            case 3:
                   logo ();
-                  System.out.print ("Ingrese el numero del nuevo bus       : ");
-                  int numero= sc.nextInt ();
-                  System.out.print("Ingrese la hora en punto de partida    : ");
-                  String hora=sc.next ();
-                  System.out.print ("Ingrese el nombre del chofer asignado : ");
+                  int numero=sanBorja.getListaDeBuses ().size ()+1;
+                  System.out.print("Ingrese la hora en punto de partida     : ");
                   sc.nextLine ();
+                  String hora=sc.nextLine();
+                  System.out.print ("Ingrese el nombre del chofer asignado   : ");
                   String chofer=sc.nextLine();
-                  System.out.print("Ingrese el nombre del copiloto asignado :");
-                  String copiloto=sc.next ();
-               try {
-                   sanBorja.registroDeBuses (numero,hora,chofer,copiloto);
-               } catch (Exception e) {
-                   System.out.println (e.getMessage ());
+                  System.out.print("Ingrese el nombre del copiloto asignado : ");
+                  String copiloto=sc.nextLine ();
+                  controlador.resgistrarBus (numero,hora,chofer,copiloto);
                    continuar ();
                    limpiaPantalla ();
                    opcionPrivado ();
-               }
-               System.out.println("\nRegistrado exitosamente!!!");
-               continuar();
-               limpiaPantalla();
-               menuPrincipal ();
-
                break;
            case 4:
                   logo ();
@@ -251,9 +219,10 @@ static Controlador controlador=new Controlador (sanBorja,vista);
                   menuPrincipal ();
                   break;
            case 6:
+
                logo ();
                System.out.println ("Vecinos que obtuvieron un premio!!!\n\n");
-               sanBorja.listarVecinosConPremio ();
+               controlador.mostrarPasajerosConPremio ();
                continuar ();
                limpiaPantalla ();
                menuPrincipal ();
@@ -262,12 +231,21 @@ static Controlador controlador=new Controlador (sanBorja,vista);
                logo ();
                System.out.println ("Asientos disponibles");
                System.out.println ("====================\n");
-               sanBorja.listarAsientosDisponiblePorBus ();
+               controlador.mostrarAsientosDisponiblesPorBus ();
                continuar ();
                limpiaPantalla ();
                menuPrincipal ();
                break;
            case 8:
+               logo();
+               cargando2 ();
+               limpiaPantalla ();
+               logo ();
+               controlador.mostrarBaseDeDatosDeVecinos ();
+               continuar ();
+               limpiaPantalla ();
+               menuPrincipal ();
+           case 9:
                limpiaPantalla ();
                menuPrincipal ();
                break;
@@ -332,6 +310,16 @@ static Controlador controlador=new Controlador (sanBorja,vista);
         }
 
 
+    }
+    public static void opcionConsultaReserva()throws  IOException,InterruptedException{
+      logo ();
+      System.out.print ("Ingresa el numero de tu reservacion : ");
+      int numeroDeReserva=sc.nextInt ();
+        System.out.println ("\n");
+      sanBorja.listarDatosdeReserva (numeroDeReserva);
+      continuar ();
+      limpiaPantalla ();
+      menuPrincipal ();
     }
 
 
