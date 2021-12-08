@@ -18,9 +18,5 @@ public class MiembroClubEcologia extends Vecino {
         return premio;
     }
 
-    @Override
-    public String toString () {
-        return "MiembroDelClub{" +
-                "} " + super.toString ();
-    }
+
 }

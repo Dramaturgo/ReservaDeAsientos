@@ -74,6 +74,7 @@ public class Controlador {
     public void mostrarBaseDeDatosDeVecinos(){
         TableList t5= municipalidad.listarBaseDeDatosDeVecinos ();
         if(t5!=null){
+            System.out.println ("Actualmente se cuenta con "+municipalidad.getListaDeVecinos ().size ()+ " vecinos registrados\n");
             vista.mostrarTableList (t5);
         }else{
             vista.mensajeFaltaInformacion ();

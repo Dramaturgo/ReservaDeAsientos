@@ -3,6 +3,8 @@ package ReservaDeAsientos;
 import com.bethecoder.ascii_table.ASCIITable;
 import com.bethecoder.ascii_table.impl.CollectionASCIITableAware;
 import com.bethecoder.ascii_table.spec.IASCIITableAware;
+import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +46,7 @@ public class Municipalidad  {
     }
     public Bus obtenerBus(int numero){
         for(Bus b:this.listaDeBuses){
-            if(b.getNumero ()==numero){
+            if(b.getNumero_de_bus ()==numero){
                 return b;
             }
         }return null;
@@ -134,10 +136,17 @@ public class Municipalidad  {
         return listaDeBuses;
     }
     public void listarDatosBus(){
+        if(listaDeVecinos!=null){
+            AnsiConsole.systemInstall ();
+            AnsiConsole.out.println(Ansi.ansi().fg(Ansi.Color.GREEN  ));
         IASCIITableAware asciiTableAware =
                 new CollectionASCIITableAware<Bus> (listaDeBuses,
-                        "numero", "hora_de_partida", "chofer", "copiloto");
+                        "numero_de_bus", "hora_de_partida", "chofer", "copiloto");
         ASCIITable.getInstance ().printTable (asciiTableAware);
+        AnsiConsole.systemUninstall ();
+        }else{
+            System.out.println ("No hay informacion");
+        }
 
     }
     public TableList listarDatosDeVecinoBuscado(String dni){
@@ -163,11 +172,11 @@ public class Municipalidad  {
             String nombre=reserva.getVecino ().getNombre ();
             String apellido=reserva.getVecino ().getApellido ();
             String dni=reserva.getVecino ().getDni ();
-            String numeroBus="000"+reserva.getBus ().getNumero ();
+            String numeroBus="000"+reserva.getBus ().getNumero_de_bus ();
             String horaPartida=String.valueOf (reserva.getBus ().getHora_de_partida ());
             String chofer=reserva.getBus ().getChofer ();
             String copiloto=reserva.getBus ().getCopiloto ();
-            String asiento=String.valueOf (reserva.getAsiento ().getNumero ());
+            String asiento=String.valueOf (reserva.getAsiento ().getNumeroDeAsiento ());
 
             TableList t2=new TableList (10,"Nro de reserva","Fecha","Nombre","Apellido","DNI","Nro de Bus","Nro de Asiento","Hora de partida","Chofer","Copiloto").sortBy (0);
             t2.addRow (numero,fecha,nombre,apellido,dni,numeroBus,asiento,horaPartida,chofer,copiloto);
@@ -180,7 +189,7 @@ public class Municipalidad  {
     public TableList listarPasajerosPorFechaYnroBus(String fecha,int numeroDeBus){
         List<Reserva>listaDeReservas=new ArrayList<> ();
         for(Reserva reserva:this.listaDeReservaciones){
-            if(reserva.getFechaReserva ().equals (fecha)&&reserva.getBus ().getNumero ()==numeroDeBus){
+            if(reserva.getFechaReserva ().equals (fecha)&&reserva.getBus ().getNumero_de_bus ()==numeroDeBus){
                 listaDeReservas.add (reserva);
             }
         }
@@ -204,23 +213,23 @@ public class Municipalidad  {
         }
         TableList t4=null;
         if(listaDeVecinosConPremio.size ()!=0){
-            t4=new TableList (8,"Nombre","Apellido","DNI","Telefono","Estado civil","Edad","Correo electornico","Obsequio").sortBy (0);
+            t4=new TableList (9,"Nombre","Apellido","DNI","Telefono","Estado civil","Edad","Correo electornico","Grupo","Obsequio").sortBy (0);
             TableList finalT=t4;
             listaDeVecinosConPremio.forEach(element ->finalT .addRow(element.getNombre(), element.getApellido (), element.getDni (), element.getTelefono ()
-                    ,element.getEstadoCivil (),String.valueOf (element.getEdad ()),element.getCorreoElectronico (),element.promocionEspecial ()));
+                    ,element.getEstadoCivil (),String.valueOf (element.getEdad ()),element.getCorreoElectronico (),element.getClass ().getSimpleName (),element.promocionEspecial ()));
         }return t4;
     }
     public TableList listarAsientosDisponiblePorBus(){
 
         TableList t5=new TableList (2,"Nro de bus","Nro de asientos disponibles").sortBy (0);
-        this.listaDeBuses.forEach (element ->t5.addRow (String.valueOf (element.getNumero ()),String.valueOf (element.asientosDisponibles ())));
+        this.listaDeBuses.forEach (element ->t5.addRow (String.valueOf (element.getNumero_de_bus ()),String.valueOf (element.asientosDisponibles ())));
         return  t5;
 
     }
     public TableList listarBaseDeDatosDeVecinos(){
-        TableList t6=new TableList (8,"Nombre","Apellido","DNI","Telefono","Estado civil","Edad","Correo electornico","Grupo").sortBy (0);
+        TableList t6=new TableList (9,"Nombre","Apellido","DNI","Telefono","Estado civil","Edad","Correo electornico","Grupo","Obsequio").sortBy (0);
         this.listaDeVecinos.forEach(element -> t6.addRow(element.getNombre(), element.getApellido (), element.getDni (), element.getTelefono ()
-                ,element.getEstadoCivil (),String.valueOf (element.getEdad ()),element.getCorreoElectronico (),element.getClass ().getSimpleName ()));
+                ,element.getEstadoCivil (),String.valueOf (element.getEdad ()),element.getCorreoElectronico (),element.getClass ().getSimpleName (), element.promocionEspecial ()));
         return t6;
     }
     public void cargarVecinos(){

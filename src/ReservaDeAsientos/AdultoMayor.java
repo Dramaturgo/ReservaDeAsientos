@@ -20,9 +20,4 @@ public class AdultoMayor extends Vecino {
         return premio;
     }
 
-    @Override
-    public String toString () {
-        return "AdultoMayor{" +
-                "} " + super.toString ();
-    }
 }

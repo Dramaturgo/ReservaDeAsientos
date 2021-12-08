@@ -1,7 +1,9 @@
 package ReservaDeAsientos;
 
-public class Vista {
+import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 
+public class Vista {
 
     public void mostrarPromedioAdultos (double promedio) {
         System.out.println ("\nEl promedio de edad en Adultos mayores es : "+promedio);
@@ -20,13 +22,20 @@ public class Vista {
         System.out.println (message);
     }
     public void mensajeExitoso () {
-        System.out.println ("\nRegistrado exitosamente!!!");
+        AnsiConsole.systemInstall ();
+        AnsiConsole.out.println(Ansi.ansi().fg(Ansi.Color.MAGENTA  ).a("\nRegistrado exitosamente!!!"));
+        AnsiConsole.systemUninstall ();
     }
     public void mensajeFaltaInformacion(){
-        System.out.println ("\nNo se encontro informacion");
+        AnsiConsole.systemInstall ();
+        AnsiConsole.out.println(Ansi.ansi().fg(Ansi.Color.MAGENTA  ).a("\nNo se encontro informacion"));
+        AnsiConsole.systemUninstall ();
     }
     public void mostrarTableList (TableList t1) {
+        AnsiConsole.systemInstall ();
+        AnsiConsole.out.println(Ansi.ansi().fg(Ansi.Color.GREEN  ));
         t1.print ();
+        AnsiConsole.systemUninstall ();
     }
 
 }

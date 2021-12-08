@@ -2,20 +2,15 @@ package ReservaDeAsientos;
 
 public class Asiento {
 
-    private  int numero;
+    private  int numeroDeAsiento;
 
-    public Asiento (int numero) {
-        this.numero = numero;
+    public Asiento (int numeroDeAsiento) {
+        this.numeroDeAsiento = numeroDeAsiento;
     }
 
-    public int getNumero () {
-        return numero;
+    public int getNumeroDeAsiento () {
+        return numeroDeAsiento;
     }
 
-    @Override
-    public String toString () {
-        return "Asiento{" +
-                "numero=" + numero +
-                '}';
-    }
+
 }

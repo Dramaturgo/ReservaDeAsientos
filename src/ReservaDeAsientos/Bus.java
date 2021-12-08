@@ -7,13 +7,13 @@ public class Bus {
 
     private String chofer;
     private String copiloto;
-    private int numero;
+    private int numero_de_bus;
     private String hora_de_partida;
     private List<Asiento>listaDeAsientos;
     private String[][]cuadroDeAsientos;
 
     public Bus (int numero_de_bus, String hora_de_partida,String nombre_de_chofer,String nombre_de_copiloto) {
-        this.numero = numero_de_bus;
+        this.numero_de_bus = numero_de_bus;
         this.hora_de_partida = hora_de_partida;
         this.chofer =nombre_de_chofer;
         this.copiloto =nombre_de_copiloto;
@@ -27,23 +27,23 @@ public class Bus {
 
     }
     public void registrarAsiento(int numero)throws Exception{
-        boolean existe = registroDeNumeros().contains (numero);
+        boolean existe = registroDeNumerosDeAsiento ().contains (numero);
         if(existe) throw new Exception("Asiento ya reservado");
         else {
             Asiento asiento = new Asiento (numero);
             this.listaDeAsientos.add (asiento);
         }
     }
-    public List<Integer>registroDeNumeros(){
+    public List<Integer> registroDeNumerosDeAsiento (){
         List<Integer>numeros=new ArrayList<>(40);
         for(Asiento asiento:this.listaDeAsientos){
-            numeros.add(asiento.getNumero());
+            numeros.add(asiento.getNumeroDeAsiento ());
         }
         return numeros;
     }
     public Asiento obtenerAsiento(int numero){
         for(Asiento a:listaDeAsientos){
-            if(a.getNumero ()==numero){
+            if(a.getNumeroDeAsiento ()==numero){
                 return a;
             }
         }return null;
@@ -95,7 +95,7 @@ public class Bus {
         return b;
 
     }
-    public static void mostrarMatriz(String [][] matriz){
+    public static void mostrarCuadroDeAsientos (String [][] matriz){
         for(int i=0;i<matriz.length;i++){
             for (int j=0;j<matriz[i].length;j++ ) {
                 System.out.print("   "+matriz[i][j]);
@@ -105,8 +105,8 @@ public class Bus {
     public int asientosDisponibles(){
         return 40-listaDeAsientos.size ();
     }
-    public int getNumero () {
-        return numero;
+    public int getNumero_de_bus () {
+        return numero_de_bus;
     }
     public String getHora_de_partida () {
         return hora_de_partida;
